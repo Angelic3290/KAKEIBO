@@ -1,15 +1,19 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <input v-model="name" @change="setName" />
-    {{ getName }}
+    <common-header />
     <router-view/>
   </div>
 </template>
 
 <script>
+import HelloWorld from './components/HelloWorld.vue'
+import CommonHeader from './components/CommonHeader.vue'
 export default {
-  name: 'App',
+  name: 'app',
+  components: {
+    HelloWorld,
+    CommonHeader
+  },
   localStorage: {
     name: {
       type: String
@@ -50,6 +54,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

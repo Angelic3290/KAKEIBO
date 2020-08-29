@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueLocalStorage from 'vue-localstorage'
-
+import './plugins/element.js'
 Vue.use(VueLocalStorage)
 
 Vue.config.productionTip = false
