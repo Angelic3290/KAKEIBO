@@ -5,9 +5,10 @@
       <div class="values">
         <p class="labels">期間</p>
         <el-date-picker
-          v-model="period"
-          type="date"
-          placeholder="Pick a day">
+          v-model="targetMonth"
+          type="month"
+          placeholder="Pick a month"
+          @change="handleTargetMonthChange">
         </el-date-picker>
       </div>
        <div class="values">
@@ -23,15 +24,15 @@
         <p style="font-size: 30px;">￥{{ toLocaleNumbers(balance) }}</p>
       </div>
     </div>
-    <monthly-report-calender />
+    <monthly-report-list :target-month="targetMonth" />
   </div>
 </template>
 <script>
 import 'normalize.css'
-import MonthlyReportCalender from './MonthlyReportCalender'
+import MonthlyReportList from './MonthlyReportList'
 export default {
   components: {
-    MonthlyReportCalender
+    MonthlyReportList
   },
   data () {
     return {
@@ -40,15 +41,20 @@ export default {
       spend: 120000,
       balance: 120000,
       name: '',
+      targetMonth: '',
     }
   },
   created() {
     this.income = this.$localStorage.get('income')
     this.spend = this.$localStorage.get('spend')
+    this.targetMonth = this.$localStorage.get('targetMonth')
   },
   methods: {
     toLocaleNumbers: function (value) {
       return value.toLocaleString()
+    },
+    handleTargetMonthChange() {
+      this.$localStorage.set('targetMonth', this.targetMonth)
     },
   }
 }

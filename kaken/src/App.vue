@@ -15,13 +15,13 @@ export default {
     CommonHeader
   },
   localStorage: {
+    data: {
+      type: Array,
+    },
     name: {
       type: String
     },
-    reportPeriodStart: {
-      type: String,
-    },
-    reportPeriodEnd: {
+    targetMonth: {
       type: String,
     },
     income: {

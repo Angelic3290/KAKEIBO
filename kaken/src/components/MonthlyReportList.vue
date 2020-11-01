@@ -1,12 +1,8 @@
 <template>
   <div class="wrapper">
     <p class="title">
-      収支入力
+      {{ target }}月の収支
     </p>
-    <el-date-picker
-      type="month"
-      placeholder="Pick a month">
-    </el-date-picker>
     <div class="iae">
       <div class="list-header">
         <p class="date">
@@ -24,38 +20,88 @@
         <p class="buttons">
         </p>
       </div>
-      <div v-for="(item) in data" :key="item.date" class="data-list">
+      <div v-for="(item, index) in data" :key="item.date" class="data-list">
         <div class="date">
           <p>
             {{ item.date }}
           </p>
         </div>
         <div class="income">
-          <el-input placeholder="Please input" style="width:50%" v-model="item.income"></el-input>
+          <p v-if="isEdit(index)">
+            ￥{{ item.income }}
+          </p>
+          <el-input v-else placeholder="Please input" style="width:50%" v-model="tempIncome"></el-input>
         </div>
         <div class="spend">
-          <el-input placeholder="Please input" style="width:50%" v-model="item.spend"></el-input>
+          <p v-if="isEdit(index)">
+            ￥{{ item.spend }}
+          </p>
+          <el-input v-else placeholder="Please input" style="width:50%" v-model="tempSpend"></el-input>
         </div>
         <div class="memo">
-          <el-input placeholder="Please input" style="width:100%" v-model="item.memo"></el-input>
+          <p v-if="isEdit(index)">
+        　  {{ item.memo }}
+          </p>
+          <el-input v-else placeholder="Please input" style="width:100%" v-model="tempMemo"></el-input>
+        </div>
+        <div class="buttons">
+          <p>
+            <el-button type="primary" icon="el-icon-edit" circle @click="handleEditButton(index)"></el-button>
+            <el-button type="success" icon="el-icon-check" circle @click="handleCompleteButton(index)"></el-button>
+          </p>
         </div>
       </div>
     </div>
-    <el-button type="success" round @click="handleSubmit">適用</el-button>
   </div>
 </template>
 <script>
 import 'normalize.css'
 import moment from 'moment'
 export default {
+  props: {
+    targetMonth: {
+      type: String,
+      required: true,
+    }
+  },
   data() {
     return {
-      targetPeropd: '',
+      data: [
+        {
+          date: '1/1',
+          income: 12000,
+          spend: 12000,
+          memo: '',
+        },
+        {
+          date: '1/2',
+          income: 12000,
+          spend: 12000,
+          memo: '',
+        },
+        {
+          date: '1/3',
+          income: 12000,
+          spend: 12000,
+          memo: '',
+        },
+        {
+          date: '1/4',
+          income: 12000,
+          spend: 12000,
+          memo: '',
+        },
+        {
+          date: '1/5',
+          income: 12000,
+          spend: 12000,
+          memo: '',
+        },
+      ],
       editKey: '',
       tempIncome: '',
       tempSpend: '',
       tempMemo: '',
-      data: []
     }
   },
   computed: {
@@ -63,33 +109,7 @@ export default {
       return moment(this.targetMonth).format('M')
     },
   },
-  created() {
-    const data = this.$localStorage.get('data')
-    console.log(data)
-    if(data.length === 0) {
-      console.log('aaaaa')
-      let i = 0
-      const defaultPeriod = this.getFirstPeriod()
-      while(i != defaultPeriod) {
-        this.data.push({
-            date: moment().startOf('month').add(i, 'days').format('M/DD'),
-            income: 0,
-            spend: 0,
-            memo: '',
-        })
-        i++
-      }
-    } else {
-      console.log('aaaaaaaaaaa')
-      this.data = this.$localStorage.get('data')
-    }
-  },
   methods: {
-    getFirstPeriod() {
-      console.log(moment().endOf('month').format('YYYY/MM/DD'))
-      console.log(moment().startOf('month').format('YYYY/MM/DD'))
-      return moment().endOf('month').diff(moment().startOf('month'), 'days') + 1
-    },
     handleEditButton(index) {
       this.tempIncome = this.data[index].income
       this.tempSpend = this.data[index].spend
@@ -108,11 +128,8 @@ export default {
       this.tempMemo  = ''
     },
     isEdit(key) {
-      return false
+      return key !== this.editKey
     },
-    handleSubmit() {
-      this.$localStorage.set('data', this.data)
-    }
   }
 }
 </script>
@@ -149,7 +166,10 @@ export default {
   font-size: 18px;
 }
 .memo {
-  width: 35%;
+  width: 20%;
   font-size: 18px;
+}
+.buttons {
+  width: 10%;
 }
 </style>
