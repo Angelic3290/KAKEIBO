@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import MonthlyReport from '@/components/MonthlyReport'
-
+import DailyReportInput from '@/components/DailyReportInput'
 Vue.use(Router)
 
 export default new Router({
@@ -10,6 +10,11 @@ export default new Router({
       path: '/hoge',
       name: 'MonthlyReport',
       component: MonthlyReport
+    },
+    {
+      path: '/dailyInput',
+      name: 'dailyInput',
+      component: DailyReportInput
     }
   ]
 })

@@ -18,6 +18,21 @@ export default {
     name: {
       type: String
     },
+    reportPeriodStart: {
+      type: String,
+    },
+    reportPeriodEnd: {
+      type: String,
+    },
+    income: {
+      type: Number,
+    },
+    spend: {
+      type: Number,
+    },
+    balance: {
+      type: Number,
+    },
   },
   data() {
     return {

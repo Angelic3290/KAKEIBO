@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper monthly-report">
     <p>月次収支レポート</p>
     <div class="montly-report-header">
       <div class="values">
@@ -36,10 +36,15 @@ export default {
   data () {
     return {
       period: '',
-      income: 120000,
+      income: 0,
       spend: 120000,
       balance: 120000,
+      name: '',
     }
+  },
+  created() {
+    this.income = this.$localStorage.get('income')
+    this.spend = this.$localStorage.get('spend')
   },
   methods: {
     toLocaleNumbers: function (value) {
