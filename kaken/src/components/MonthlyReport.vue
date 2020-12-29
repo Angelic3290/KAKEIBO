@@ -8,7 +8,7 @@
           v-model="targetMonth"
           type="month"
           placeholder="Pick a month"
-          @change="handleTargetMonthChange">
+          @change="handleTargetMonthChange">0
         </el-date-picker>
       </div>
        <div class="values">
@@ -30,6 +30,8 @@
 <script>
 import 'normalize.css'
 import MonthlyReportList from './MonthlyReportList'
+import moment from 'moment'
+
 export default {
   components: {
     MonthlyReportList
@@ -38,16 +40,32 @@ export default {
     return {
       period: '',
       income: 0,
-      spend: 120000,
-      balance: 120000,
+      spend: 0,
+      balance: 0,
       name: '',
       targetMonth: '',
+      storageData: [],
+      data: [],
     }
   },
   created() {
-    this.income = this.$localStorage.get('income')
-    this.spend = this.$localStorage.get('spend')
-    this.targetMonth = this.$localStorage.get('targetMonth')
+    this.targetMonth = moment().format('YYYY/MM')
+    this.storageData = this.$localStorage.get('data')
+    const temp = this.storageData.find(v => v.yearMonth === this.targetMonth)
+    this.data = temp ? temp.data : []
+    console.log(this.data)
+    let totalIncome = 0
+    let totalSpend = 0
+    let totalBalance = 0
+    for (let i = 0; i < this.data.length; i++) {
+      console.log(parseInt(this.data[i].income))
+      console.log(parseInt(this.data[i].spend))
+      totalIncome += parseInt(this.data[i].income)
+      totalSpend += parseInt(this.data[i].spend)
+    }
+    this.income= totalIncome
+    this.spend = totalSpend
+    this.balance= totalIncome - totalSpend
   },
   methods: {
     toLocaleNumbers: function (value) {

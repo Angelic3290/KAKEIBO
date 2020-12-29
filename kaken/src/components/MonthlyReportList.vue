@@ -14,11 +14,6 @@
         <p class="spend">
           支出
         </p>
-        <p class="memo">
-          メモ
-        </p>
-        <p class="buttons">
-        </p>
       </div>
       <div v-for="(item, index) in data" :key="item.date" class="data-list">
         <div class="date">
@@ -38,18 +33,6 @@
           </p>
           <el-input v-else placeholder="Please input" style="width:50%" v-model="tempSpend"></el-input>
         </div>
-        <div class="memo">
-          <p v-if="isEdit(index)">
-        　  {{ item.memo }}
-          </p>
-          <el-input v-else placeholder="Please input" style="width:100%" v-model="tempMemo"></el-input>
-        </div>
-        <div class="buttons">
-          <p>
-            <el-button type="primary" icon="el-icon-edit" circle @click="handleEditButton(index)"></el-button>
-            <el-button type="success" icon="el-icon-check" circle @click="handleCompleteButton(index)"></el-button>
-          </p>
-        </div>
       </div>
     </div>
   </div>
@@ -66,42 +49,22 @@ export default {
   },
   data() {
     return {
-      data: [
-        {
-          date: '1/1',
-          income: 12000,
-          spend: 12000,
-          memo: '',
-        },
-        {
-          date: '1/2',
-          income: 12000,
-          spend: 12000,
-          memo: '',
-        },
-        {
-          date: '1/3',
-          income: 12000,
-          spend: 12000,
-          memo: '',
-        },
-        {
-          date: '1/4',
-          income: 12000,
-          spend: 12000,
-          memo: '',
-        },
-        {
-          date: '1/5',
-          income: 12000,
-          spend: 12000,
-          memo: '',
-        },
-      ],
+      data: [],
       editKey: '',
       tempIncome: '',
       tempSpend: '',
       tempMemo: '',
+      selectedMonth: '',
+      typeOptions: [
+        {value: '1',　　label:'食費'},
+        {value: '2',　　label:'家賃'},
+        {value: '3',　　label:'光熱費'},
+        {value: '4',　　label:'交際費'},
+        {value: '5',　　label:'雑費'},
+        {value: '6',　　label:'通信費'},
+        {value: '7',　　label:'交通費'},
+        {value: '8',　　label:'日用品費'},
+      ],
     }
   },
   computed: {
@@ -109,7 +72,17 @@ export default {
       return moment(this.targetMonth).format('M')
     },
   },
+  created() {
+    this.selectedMonth = moment().format('YYYY/MM')
+    this.storageData = this.$localStorage.get('data')
+    const v = this.storageData.find(v => v.yearMonth === this.selectedMonth)
+    this.data = v ? v.data : []
+  },
   methods: {
+    getCategory(id){
+      const option = this.typeOptions.find(v => v.value === id)
+      return option ? option.label : ''
+    },
     handleEditButton(index) {
       this.tempIncome = this.data[index].income
       this.tempSpend = this.data[index].spend
@@ -117,10 +90,13 @@ export default {
       this.editKey = index
     },
     handleCompleteButton(index) {
-      this.data[index].income = this.tempIncome
-      this.data[index].spend = this.tempSpend
-      this.data[index].memo = this.tempMemo
-      this.editKey = ''
+      const data = this.storageData.filter(v => v.yearMonth !== this.selectedMonth)
+      data.push({
+          yearMonth: this.selectedMonth,
+          data: this.data,
+        })
+      this.$localStorage.set('data', data)
+      this.editKey = index
     },
     initTempData() {
       this.tempIncome = ''
